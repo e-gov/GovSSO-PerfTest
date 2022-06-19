@@ -1,16 +1,18 @@
 <img src="doc/img/eu_regional_development_fund_horizontal.jpg" width="350" height="200" alt="European Union European Regional Development Fund"/>
 
-# GOVSSO-Session Performance Tests
+# GOVSSO Performance Tests
 
-Load tests for GOVSSO-Session (both Ory Hydra OIDC and Estonian specific session service component)
+Load tests for GOVSSO service (both Ory Hydra and GOVSSO-Session).
 
 ## Prerequisites
 
 * Java 17 JDK
 * Checkout [GOVSSO-Session](https://github.com/e-gov/GOVSSO-Session) and follow instructions
-in [readme](https://github.com/e-gov/GOVSSO-Session/blob/master/README.md) to bring up docker container with required
-services.
-* If reading this in IntelliJ IDEA, enable [Mermaid.js support in Markdown files](https://www.jetbrains.com/go/guide/tips/mermaid-js-support-in-markdown/)
+  in [README.md](https://github.com/e-gov/GOVSSO-Session/blob/master/README.md) to bring up Docker Compose containers
+  with required services.
+* If reading this in IntelliJ IDEA,
+  enable [Mermaid.js support in Markdown files](https://www.jetbrains.com/go/guide/tips/mermaid-js-support-in-markdown/)
+  .
 
 ## GOVSSO service high level architecture
 
@@ -448,9 +450,9 @@ sequenceDiagram
 | :---------|:----------|:--------------|:---------------------|
 | `gatling.simulationClass` | Yes | | Simulation to execute. Example `ee.ria.govsso.perftest.MultiClientSimulation` |
 | `injectorProfile` | No | `RAMP_USERS` | Injector profile to execute. Any of `RAMP_USERS, STRESS_RAMP_USERS, STRESS_PEAK_USERS` |
-| `clientA` | No | `https://clienta.localhost:11443` | Client A url. |
-| `clientB` | No | `https://clientb.localhost:12443` | Client B url. |
-| `maxSessionTime` | No| `43200` | Maximum session time in seconds, allowed by GOVSSO-Session service. |
+| `clientA` | No | `https://clienta.localhost:11443` | Client A URL. |
+| `clientB` | No | `https://clientb.localhost:12443` | Client B URL. |
+| `maxSessionTime` | No| `43200` | Maximum session time in seconds that is allowed by GOVSSO-Session service. |
 | `sessionRefreshInterval` | No | `780` | Session refresh interval in seconds. |
 | `sessionRefreshWithPause` | No | `false` | Simulate session refresh flow with actual pauses between intervals. Example: If `sessionRefreshInterval=15`, `maxSessionTime=12` and `sessionRefreshWithPause=false`, then session refresh flow is performed `N=43200/780=55` times, without pauses in between. |
 
@@ -585,7 +587,7 @@ sequenceDiagram
 
 ## Injector profiles
 
-Read more about [Injection profiles](https://gatling.io/docs/gatling/reference/current/core/injection/)
+Read more about [Injection profiles](https://gatling.io/docs/gatling/reference/current/core/injection/).
 
 This performance test contains some predefined injector profiles to execute scenario.
 
@@ -600,7 +602,7 @@ Injects users distributed evenly on given duration.
 | Parameter | Mandatory | Default value | Description, example |
 | :---------|:----------|:--------------|:---------------------|
 | `duration` | No | `3600` | Duration of each ramping stage. |
-| `rampUsers` | No | `5` | Nr of users distributed evenly on given duration. |
+| `rampUsers` | No | `5` | Number of users distributed evenly on given duration. |
 
 ```
 injectOpen(
@@ -610,7 +612,8 @@ injectOpen(
 
 ### STRESS_RAMP_USERS
 
-Injects users at a constant rate in stages, defined in users per second, during a given duration. Users will be injected at randomized intervals.
+Injects users at a constant rate in stages, defined in users per second, during a given duration. Users will be injected
+at randomized intervals.
 
 ## Simulation parameters
 
@@ -618,17 +621,18 @@ Injects users at a constant rate in stages, defined in users per second, during 
 | :---------|:----------|:--------------|:---------------------|
 | `duration` | No | `3600` | Duration of each ramping stage. |
 | `startRampUsers` | No | `0` | Users at start stage. |
-| `rampUsers` | No | `5` | Nr of users to ramp up at each stage. |
+| `rampUsers` | No | `5` | Number of users to ramp up at each stage. |
 | `maxRampUsers` | No | `30` | Max users at peak stage. |
 
 Example:
 
 - `duration = 120`
-- `startRampUsers = 30`  
+- `startRampUsers = 30`
 - `rampUsers = 10`
 - `maxRampUsers = 60`
 
-Will generate injector profile
+Will generate injector profile:
+
 ```
 injectOpen(
     constantUsersPerSec(30).during(ofSeconds(120)).randomized()
@@ -643,12 +647,13 @@ injectOpen(
 
 ### STRESS_PEAK_USERS
 
-Injects a given number of users following a smooth approximation of the heaviside step function stretched to a given duration.
+Injects a given number of users following a smooth approximation of the heaviside step function stretched to a given
+duration.
 
 | Parameter | Mandatory | Default value | Description, example |
 | :---------|:----------|:--------------|:---------------------|
 | `duration` | No | `3600` | Duration of each ramping stage. |
-| `peakUsers` | No | `100000` | Nr of users distributed evenly on given duration. |
+| `peakUsers` | No | `100000` | Number of users distributed evenly on given duration. |
 
 ```
 injectOpen(
@@ -658,17 +663,14 @@ injectOpen(
 
 ## Running
 
-```shell
-./mvnw compile
-```
-
-### With default parameters
+With default parameters:
 
 ```shell
 ./mvnw gatling:test -Dgatling.simulationClass=ee.ria.govsso.perftest.MultiClientSimulation
 ```
 
-### With custom parameters
+With custom parameters:
+
 ```shell
 ./mvnw gatling:test -Dgatling.simulationClass=ee.ria.govsso.perftest.MultiClientSimulation -DclientA=https://clienta.localhost:8443 -DclientB=https://clientb.localhost:9443
 ```
