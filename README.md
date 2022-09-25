@@ -1,8 +1,8 @@
 <img src="doc/img/eu_regional_development_fund_horizontal.jpg" width="350" height="200" alt="European Union European Regional Development Fund"/>
 
-# GOVSSO Performance Tests
+# GovSSO Performance Tests
 
-Load tests for GOVSSO service (both Ory Hydra and GOVSSO-Session).
+Load tests for GovSSO service (both Ory Hydra and GOVSSO-Session).
 
 ## Prerequisites
 
@@ -14,7 +14,7 @@ Load tests for GOVSSO service (both Ory Hydra and GOVSSO-Session).
   enable [Mermaid.js support in Markdown files](https://www.jetbrains.com/go/guide/tips/mermaid-js-support-in-markdown/)
   .
 
-## GOVSSO service high level architecture
+## GovSSO service high level architecture
 
 ```mermaid
 flowchart LR

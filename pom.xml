@@ -7,7 +7,7 @@
     <artifactId>govsso-perftest</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <name>GOVSSO Performance Tests</name>
+    <name>GovSSO Performance Tests</name>
     <licenses>
         <license>
             <name>MIT</name>
