@@ -245,75 +245,17 @@ sequenceDiagram
     participant GOVSSO SESSION
     participant GOVSSO OIDC    
     
-    User Agent->>Client Application:1. Start silent refresh: client/oauth2/authorization?prompt=none
+    User Agent->>Client Application:1. Start silent refresh. Post client/oauth2/refresh/govsso
     activate User Agent
     activate Client Application
-    Client Application->>GOVSSO OIDC: Session found. Start Authorize Code Flow with id token hint.
+    Client Application-->>Client Application: Client application session check. Start Refresh Token Flow.
+    Client Application-->>GOVSSO OIDC: post /token
     activate GOVSSO OIDC
-    GOVSSO OIDC-->>Client Application: 
-    deactivate GOVSSO OIDC    
-    Client Application-->>User Agent: Redirect: govsso-oidc/oauth2/auth?prompt=none&id_token_hint
-    deactivate Client Application
-    
-    User Agent->>GOVSSO OIDC: 2. Get: govsso-oidc/oauth2/auth?prompt=none&id_token_hint
-    activate GOVSSO OIDC
-    GOVSSO OIDC-->>User Agent: Redirect: govsso/login/init?login_challenge
-    deactivate GOVSSO OIDC
-    
-    User Agent->>GOVSSO SESSION: 3. Get: govsso/login/init?login_challenge
-    activate GOVSSO SESSION
-    GOVSSO SESSION->>GOVSSO OIDC: Get Login Request Info.
-    activate GOVSSO OIDC
-    GOVSSO OIDC-->>GOVSSO SESSION: 
-    deactivate GOVSSO OIDC    
-    GOVSSO SESSION-->>GOVSSO SESSION: Check if Authentication Code Flow started with prompt=none?
-    GOVSSO SESSION-->>GOVSSO SESSION: Check if valid GOVSSO id token?
-    GOVSSO SESSION->>GOVSSO OIDC: Get Active Consents.
-    activate GOVSSO OIDC
-    GOVSSO OIDC-->>GOVSSO SESSION: 
-    deactivate GOVSSO OIDC 
-    GOVSSO SESSION-->>GOVSSO SESSION: Check if valid TARA id token?
-    GOVSSO SESSION->>GOVSSO OIDC: Accept login.
-    activate GOVSSO OIDC
-    GOVSSO OIDC-->>GOVSSO SESSION: 
-    deactivate GOVSSO OIDC
-    GOVSSO SESSION-->>User Agent: Redirect: govsso-oidc/oauth2/auth?login_verifier&prompt=none&id_token_hint
-    deactivate GOVSSO SESSION   
-    
-    User Agent->>GOVSSO OIDC: 4. Get: govsso-oidc/oauth2/auth?login_verifier
-    activate GOVSSO OIDC
-    GOVSSO OIDC-->>User Agent: Redirect: govsso/consent/init
-    deactivate GOVSSO OIDC
-    
-    User Agent->>GOVSSO SESSION: 5. Get: govsso/consent/init
-    activate GOVSSO SESSION
-    activate GOVSSO OIDC
-    GOVSSO SESSION->>GOVSSO OIDC: Get Consent Request Info.
-    GOVSSO OIDC-->>GOVSSO SESSION: 
-    GOVSSO SESSION->>GOVSSO OIDC: Accept consent.
-    GOVSSO OIDC-->>GOVSSO SESSION: 
-    deactivate GOVSSO OIDC
-    GOVSSO SESSION-->>User Agent: Redirect: govsso-oidc/oauth2/auth?consent_verifier
-    deactivate GOVSSO SESSION
-    
-    User Agent->>GOVSSO OIDC: 6. Get: govsso-oidc/oauth2/auth?consent_verifier
-    activate GOVSSO OIDC
-    GOVSSO OIDC-->>User Agent: Redirect: client/oauth/code
-    deactivate GOVSSO OIDC
-    
-    User Agent->>Client Application: 7. Get: client/oauth/code
-    activate Client Application
-    Client Application->>GOVSSO OIDC: GOVSSO identity token request.
-    activate GOVSSO OIDC
+    GOVSSO OIDC-->>GOVSSO OIDC: Refresh token session check. New refresh token and ID token.
     GOVSSO OIDC-->>Client Application: 
     deactivate GOVSSO OIDC
-    Client Application-->>Client Application: Extend session.
-    Client Application-->>User Agent: Logged in. Redirect: client/dashboard
-    deactivate Client Application
-    
-    User Agent->>Client Application: 8. Get: client/dashboard
-    activate Client Application
-    Client Application-->>User Agent: 
+    Client Application-->>Client Application: Store new refresh token and ID token.    
+    Client Application-->>User Agent: Signal user agent that the session update request was successful.
     deactivate Client Application
     
     deactivate User Agent

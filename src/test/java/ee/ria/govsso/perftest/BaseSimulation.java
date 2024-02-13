@@ -266,44 +266,13 @@ abstract class BaseSimulation extends Simulation {
                                 .check(css("input[name='_csrf']", "value")
                                         .saveAs("client_%s_csrf_token".formatted(clientId)))).exitHereIfFailed());
     }
-
     ChainBuilder silentRefreshFlow(String clientId, String clientUrl) {
         return group("Refresh %s".formatted(clientId))
-                .on(exec(http("client/oauth2/authorization/govsso?prompt=none")
-                        .get("%s/oauth2/authorization/govsso?prompt=none".formatted(clientUrl))
+                .on(exec(http("client/oauth2/refresh/govsso")
+                        .post("%s/oauth2/refresh/govsso".formatted(clientUrl))
                         .silent()
-                        .check(status().is(302))
-                        .check(header("location").saveAs("redirect_uri"))).exitHereIfFailed()
-                        .exec(http("govsso-oidc/oauth2/auth?prompt=none&id_token_hint")
-                                .get("#{redirect_uri}")
-                                .check(status().is(302))
-                                .check(header("location").saveAs("redirect_uri"))).exitHereIfFailed()
-                        .exec(http("govsso/login/init?login_challenge")
-                                .get("#{redirect_uri}")
-                                .check(status().is(302))
-                                .check(header("location").saveAs("redirect_uri"))).exitHereIfFailed()
-                        .exec(http("govsso-oidc/oauth2/auth?login_verifier&prompt=none&id_token_hint")
-                                .get("#{redirect_uri}")
-                                .check(status().is(302))
-                                .check(header("location").saveAs("redirect_uri"))).exitHereIfFailed()
-                        .exec(http("govsso/consent/init?consent_challenge")
-                                .get("#{redirect_uri}")
-                                .check(status().is(302))
-                                .check(header("location").saveAs("redirect_uri"))).exitHereIfFailed()
-                        .exec(http("govsso-oidc/oauth2/auth?consent_verifier&prompt=none&id_token_hint")
-                                .get("#{redirect_uri}")
-                                .check(status().is(303))
-                                .check(header("location").saveAs("redirect_uri"))).exitHereIfFailed()
-                        .exec(http("client/oauth/code/govsso")
-                                .get("#{redirect_uri}")
-                                .check(status().is(302))
-                                .check(headerRegex("location", ".*/dashboard"))).exitHereIfFailed()
-                        .exec(http("client/dashboard")
-                                .get("%s/dashboard".formatted(clientUrl))
-                                .silent()
-                                .check(status().is(200))
-                                .check(css("input[name='_csrf']", "value")
-                                        .saveAs("client_%s_csrf_token".formatted(clientId)))).exitHereIfFailed());
+                        .header("X-Xsrf-Token", "#{client_%s_csrf_token}".formatted(clientId))
+                        .check(status().is(200))).exitHereIfFailed());
     }
 
     ChainBuilder logoutFlow(String clientId, String clientUrl) {
