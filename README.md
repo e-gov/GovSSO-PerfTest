@@ -2,13 +2,13 @@
 
 # GovSSO Performance Tests
 
-Load tests for GovSSO service (both Ory Hydra and GOVSSO-Session).
+Load tests for GovSSO service (both Ory Hydra and GovSSO-Session).
 
 ## Prerequisites
 
 * Java 17 JDK
-* Checkout [GOVSSO-Session](https://github.com/e-gov/GOVSSO-Session) and follow instructions
-  in [README.md](https://github.com/e-gov/GOVSSO-Session/blob/master/README.md) to bring up Docker Compose containers
+* Checkout [GovSSO-Session](https://github.com/e-gov/GovSSO-Session) and follow instructions
+  in [README.md](https://github.com/e-gov/GovSSO-Session/blob/master/README.md) to bring up Docker Compose containers
   with required services.
 * If reading this in IntelliJ IDEA,
   enable [Mermaid.js support in Markdown files](https://www.jetbrains.com/go/guide/tips/mermaid-js-support-in-markdown/)
@@ -394,7 +394,7 @@ sequenceDiagram
 | `injectorProfile` | No | `RAMP_USERS` | Injector profile to execute. Any of `RAMP_USERS, STRESS_RAMP_USERS, STRESS_PEAK_USERS` |
 | `clientA` | No | `https://clienta.localhost:11443` | Client A URL. |
 | `clientB` | No | `https://clientb.localhost:12443` | Client B URL. |
-| `maxSessionTime` | No| `43200` | Maximum session time in seconds that is allowed by GOVSSO-Session service. |
+| `maxSessionTime` | No| `43200` | Maximum session time in seconds that is allowed by GovSSO-Session service. |
 | `sessionRefreshInterval` | No | `780` | Session refresh interval in seconds. |
 | `sessionRefreshWithPause` | No | `false` | Simulate session refresh flow with actual pauses between intervals. Example: If `sessionRefreshInterval=15`, `maxSessionTime=12` and `sessionRefreshWithPause=false`, then session refresh flow is performed `N=43200/780=55` times, without pauses in between. |
 
